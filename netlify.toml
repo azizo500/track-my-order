@@ -1,0 +1,23 @@
+[build]
+  base = "."
+  command = "node scripts/netlify-build.mjs"
+  publish = "frontend/.next"
+
+[build.environment]
+  NODE_VERSION = "22.22.0"
+  ORDERFLOW_NETLIFY = "true"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  external_node_modules = ["@nestjs/common", "@nestjs/core", "@nestjs/platform-express", "@nestjs/jwt", "@nestjs/throttler", "@prisma/client", "@netlify/database", "serverless-http", "class-transformer", "class-validator", "reflect-metadata", "rxjs", "bcryptjs", "cookie-parser", "helmet", "dotenv"]
+  included_files = ["backend/dist/**", "backend/generated/cloud/**"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
+  force = true
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
